@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <link href="./styles/output.css" rel="stylesheet" type="text/css" />
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link href="https://fonts.googleapis.com/css?family=Anton&family=Manrope:wght@200..800&display=swap"
+        rel="stylesheet" />
+    <title>Les petits plats</title>
+</head>
+
+<body class="max-w-screen-1440 m-auto">
+    <header class="hero h-600">
+        <a class="py-12 px-14 w-fit" href="/">
+            <img class="logo" src="./assets/img/Logo.png" alt="Les petits plats logo" />
+        </a>
+        <div class="text-center px-8 pb-16 w-full h-full flex flex-col justify-center items-center">
+            <h1 class="text-yellow-custom text-5xl font-anton mb-8 leading-snug">
+                CHERCHEZ PARMI PLUS DE 1500 RECETTES <br />DU QUOTIDIEN, SIMPLES ET
+                DÉLICIEUSES
+            </h1>
+            <form class="relative w-3/4 mx-auto">
+                <input type="text" id="searchbar" autocomplete="off"
+                    placeholder="Rechercher une recette, un ingrédient..." class="search-input" />
+                <i id="close-icon"
+                    class="fa-solid fa-xmark absolute text-2xl top-2/4 -translate-y-1/2 right-20 text-gray-custom opacity-0 cursor-pointer"></i>
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            </form>
+        </div>
+    </header>
+
+
+    <main class="bg-gray-light py-6 px-24 h-full">
+        <div class="flex space-y-4 justify-between items-center">
+
+            <div class="flex space-y-0 space-x-14">
+                <div class="dropdown-button">
+                    <div data-name="ingredients" class="dropdown-content">
+                        <h3 class="mr-16">Ingrédients</h3>
+                        <i class="fa-solid fa-chevron-down" id="icon-ingredients"></i>
+                    </div>
+                    <div class="absolute left-0 bg-white z-10 w-48 rounded-bl-xl rounded-br-xl hidden" id="ingredients">
+                        <i class="fa-solid fa-magnifying-glass absolute top-6 right-5 sm:right-10 text-gray-custom"
+                            id="search-ingredient"></i>
+                        <i
+                            class="fa-solid fa-xmark text-gray-custom absolute top-6 right-11 cursor-pointer opacity-0"></i>
+                        <input class="search-option" id="input-option-ingredient" type="text" autocomplete="off">
+                        <ul class="overflow-y-scroll max-h-52">
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="dropdown-button">
+                    <div data-name="kitchen-appliance" class="dropdown-content">
+                        <h3 class="mr-16">Appareils</h3>
+                        <i class="fa-solid fa-chevron-down" id="icon-kitchen-appliance"></i>
+                    </div>
+                    <div class="absolute left-0 bg-white z-10 w-48 rounded-bl-xl rounded-br-xl hidden"
+                        id="kitchen-appliance">
+                        <i class="fa-solid fa-magnifying-glass absolute top-6 right-5 sm:right-10 text-gray-custom"
+                            id="search-kitchen-appliance"></i>
+                        <i
+                            class="fa-solid fa-xmark text-gray-custom absolute top-6 right-11 cursor-pointer opacity-0"></i>
+                        <input class="search-option" id="input-option-kitchen-appliance" type="text" autocomplete="off">
+                        <div class="bg-yellow-custom px-4 py-3 mb-2 relative" id="dropdown-selected-option">Test item
+                            <i
+                                class="cursor-pointer fa-solid fa-xmark absolute -translate-y-1/2 top-1/2 right-4 px-1 py-0.5 rounded-full bg-black text-yellow-custom font-bold"></i>
+                        </div>
+                        <ul class="overflow-y-scroll max-h-52">
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="dropdown-button">
+                    <div data-name="ustensils" class="dropdown-content">
+                        <h3 class="mr-16">Ustensiles</h3>
+                        <i class="fa-solid fa-chevron-down" id="icon-ustensils"></i>
+                    </div>
+                    <div class="absolute left-0 bg-white z-10 w-48 rounded-bl-xl rounded-br-xl hidden" id="ustensils">
+                        <i class="fa-solid fa-magnifying-glass absolute top-6 right-5 sm:right-10 text-gray-custom"
+                            id="search-ustensils"></i>
+                        <i
+                            class="fa-solid fa-xmark text-gray-custom absolute top-6 right-11 cursor-pointer opacity-0"></i>
+                        <input class="search-option" id="input-option-ustensils" type="text" autocomplete="off">
+                        <ul class="overflow-y-scroll max-h-52">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h2 aria-label="nombre de recettes" class="font-anton text-xl pb-2">
+                <span id="recipes-number">0</span>
+                <span>recettes</span>
+            </h2>
+        </div>
+        <div class="flex items-center mt-5" id="div-selected-option"></div>
+        <div class="grid gap-20 mt-4 grid-cols-3" id="recipes-section"></div>
+    </main>
+
+
+
+    <script src="https://kit.fontawesome.com/dc167a13df.js" crossorigin="anonymous"></script>
+    <!-- <script type="module" src="scripts/index.js"></script> -->
+</body>
+
+</html>

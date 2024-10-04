@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        font-family: 'Manrope', sans-serif;
+        box-sizing: border-box;
+    }
+}
+
+@layer components {
+    .logo {
+        @apply w-52;
+    }
+
+    .search-input {
+        @apply w-full pl-6 pr-28 py-5 rounded-xl cursor-pointer focus:outline-none placeholder:text-ellipsis;
+    }
+
+    .search-icon {
+        @apply absolute top-2/4 -translate-y-1/2 right-3 text-3xl bg-black p-3 text-white rounded-lg cursor-pointer hover:bg-yellow-custom hover:text-black transition-all duration-300;
+    }
+
+    .dropdown-button {
+        @apply bg-white items-center p-4 rounded-lg md:w-48 relative w-full;
+    }
+
+    .dropdown-content {
+        @apply flex cursor-pointer justify-between items-center;
+    }
+
+    .hero {
+        @apply bg-no-repeat bg-center bg-cover flex flex-col;
+        background-image: url('../assets/img/Hero.jpg');
+    }
+
+    .search-option {
+        @apply border-slate-300 border-solid border block py-2 pl-4 pr-14 my-3 mx-auto md:w-44 focus:outline-none w-11/12;
+    }
+}
