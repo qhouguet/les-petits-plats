@@ -26,7 +26,14 @@ export const addTagToFilter = (tag, type) => {
     const filterData = filterMapping[type]
     if (!filterData) return
 
-    const isAlreadyPresent = filterData.list.some((item) => item === formattedTag)
+    let isAlreadyPresent = false
+    for (let i = 0; i < filterData.list.length; i++) {
+        if (filterData.list[i] === formattedTag) {
+            isAlreadyPresent = true
+            break
+        }
+    }
+
     if (!isAlreadyPresent) {
         filterData.list.push(formattedTag)
         filterDropdownTags(type, filterData.searchText)
@@ -67,22 +74,42 @@ export const removeTagFromFilter = (tag, type) => {
     const formattedTag = tag.toLowerCase()
 
     if (type === 'ingredients') {
-        activeFilters.ingredients = activeFilters.ingredients.filter((item) => item !== formattedTag)
+        let newIngredients = []
+        for (let i = 0; i < activeFilters.ingredients.length; i++) {
+            if (activeFilters.ingredients[i] !== formattedTag) {
+                newIngredients.push(activeFilters.ingredients[i])
+            }
+        }
+        activeFilters.ingredients = newIngredients
         filterDropdownTags('ingredients', ingredientSearchText)
     } else if (type === 'appliances') {
-        activeFilters.appliances = activeFilters.appliances.filter((item) => item !== formattedTag)
+        let newAppliances = []
+        for (let i = 0; i < activeFilters.appliances.length; i++) {
+            if (activeFilters.appliances[i] !== formattedTag) {
+                newAppliances.push(activeFilters.appliances[i])
+            }
+        }
+        activeFilters.appliances = newAppliances
         filterDropdownTags('appliances', appliancesearchText)
     } else if (type === 'ustensils') {
-        activeFilters.ustensils = activeFilters.ustensils.filter((item) => item !== formattedTag)
+        let newUstensils = []
+        for (let i = 0; i < activeFilters.ustensils.length; i++) {
+            if (activeFilters.ustensils[i] !== formattedTag) {
+                newUstensils.push(activeFilters.ustensils[i])
+            }
+        }
+        activeFilters.ustensils = newUstensils
         filterDropdownTags('ustensils', ustensilsSearchText)
     }
 
     const divSelectedOption = document.getElementById('div-selected-option')
-    divSelectedOption.querySelectorAll('div').forEach((div) => {
+    const selectedDivs = divSelectedOption.querySelectorAll('div')
+    for (let i = 0; i < selectedDivs.length; i++) {
+        const div = selectedDivs[i]
         if (div.textContent.trim() === formatString(tag)) {
             div.remove()
         }
-    })
+    }
 
     let dropdownSelected
     if (type === 'ingredients') {
@@ -93,11 +120,13 @@ export const removeTagFromFilter = (tag, type) => {
         dropdownSelected = document.getElementById('dropdown-selected-options-ustensils')
     }
 
-    dropdownSelected.querySelectorAll('div').forEach((div) => {
+    const dropdownDivs = dropdownSelected.querySelectorAll('div')
+    for (let i = 0; i < dropdownDivs.length; i++) {
+        const div = dropdownDivs[i]
         if (div.textContent.trim() === formatString(tag)) {
             div.remove()
         }
-    })
+    }
 
     searchRecipes()
 }
@@ -166,7 +195,22 @@ export const filterDropdownTags = (type, searchText) => {
         domElement = optionUstensils
     }
 
-    const filteredOptions = options.filter((option) => !selectedTags.includes(option.toLowerCase()))
+    let filteredOptions = []
+    for (let i = 0; i < options.length; i++) {
+        let optionLower = options[i].toLowerCase()
+        let isSelected = false
+
+        for (let j = 0; j < selectedTags.length; j++) {
+            if (selectedTags[j] === optionLower) {
+                isSelected = true
+                break
+            }
+        }
+
+        if (!isSelected) {
+            filteredOptions.push(options[i])
+        }
+    }
 
     renderOptions(filteredOptions, domElement, type)
 }

@@ -70,14 +70,15 @@ const toggleOptions = (e, type, openButton) => {
     const dropdownElements = [optionIngredients, optionKitchenAppliance, optionUstensils]
 
     // closes other opened dropdowns
-    dropdownElements.forEach((dropdown) => {
+    for (let i = 0; i < dropdownElements.length; i++) {
+        const dropdown = dropdownElements[i]
         const dropdownContentId = dropdown.getAttribute('data-name')
         const dropdownContentElement = document.getElementById(dropdownContentId)
 
         if (dropdownContentElement && dropdownContentElement !== domElement) {
             dropdownContentElement.classList.add('hidden')
         }
-    })
+    }
 
     if (isOpen) {
         closeOptions(type)
@@ -109,11 +110,14 @@ const closeOptions = (type) => {
 export const renderOptions = (options, domElement, type) => {
     const ul = domElement?.parentElement?.querySelector('ul')
 
-    Array.from(ul.childNodes).forEach((child) => ul.removeChild(child))
+    while (ul.firstChild) {
+        ul.removeChild(ul.firstChild)
+    }
 
     const fragment = document.createDocumentFragment()
 
-    options.map((option) => {
+    for (let i = 0; i < options.length; i++) {
+        const option = options[i]
         const li = document.createElement('li')
         li.classList.add('hover:bg-yellow-custom', 'cursor-pointer', 'py-3', 'px-4', 'relative')
         li.textContent = formatString(option)
@@ -124,7 +128,7 @@ export const renderOptions = (options, domElement, type) => {
         })
 
         fragment.appendChild(li)
-    })
+    }
 
     ul.appendChild(fragment)
 }
@@ -162,15 +166,28 @@ export const searchRecipes = () => {
     }
 
     if (searchQuery.length >= 3) {
-        filteredRecipes = recipeList.filter((recipe) => {
-            const searchInTitle = recipe.name.toLowerCase().includes(searchQuery)
-            const searchInDescription = recipe.description.toLowerCase().includes(searchQuery)
-            const searchInIngredients = recipe.ingredients.some((ingredientObj) =>
-                ingredientObj.ingredient.toLowerCase().includes(searchQuery)
-            )
+        const tempFilteredRecipes = []
 
-            return searchInTitle || searchInDescription || searchInIngredients
-        })
+        for (let i = 0; i < recipeList.length; i++) {
+            const recipe = recipeList[i]
+            const searchInTitle = recipe.name.toLowerCase().indexOf(searchQuery) !== -1
+            const searchInDescription = recipe.description.toLowerCase().indexOf(searchQuery) !== -1
+
+            let searchInIngredients = false
+            for (let j = 0; j < recipe.ingredients.length; j++) {
+                const ingredientObj = recipe.ingredients[j]
+                if (ingredientObj.ingredient.toLowerCase().indexOf(searchQuery) !== -1) {
+                    searchInIngredients = true
+                    break
+                }
+            }
+
+            if (searchInTitle || searchInDescription || searchInIngredients) {
+                tempFilteredRecipes.push(recipe)
+            }
+        }
+
+        filteredRecipes = tempFilteredRecipes
     }
 
     applyFilters()
@@ -181,28 +198,67 @@ export const searchRecipes = () => {
 const applyFilters = () => {
     let tempRecipes = []
 
-    filteredRecipes.forEach((recipe) => {
-        const matchIngredients =
-            activeFilters.ingredients.length === 0 ||
-            activeFilters.ingredients.every((filter) =>
-                recipe.ingredients.some((ingredient) =>
-                    ingredient.ingredient.toLowerCase().includes(filter.toLowerCase())
-                )
-            )
+    for (let i = 0; i < filteredRecipes.length; i++) {
+        const recipe = filteredRecipes[i]
 
-        const matchAppliances =
-            activeFilters.appliances.length === 0 || activeFilters.appliances.includes(recipe.appliance.toLowerCase())
+        let matchIngredients = true
+        if (activeFilters.ingredients.length > 0) {
+            for (let j = 0; j < activeFilters.ingredients.length; j++) {
+                let ingredientFound = false
+                const filter = activeFilters.ingredients[j].toLowerCase()
 
-        const matchUstensils =
-            activeFilters.ustensils.length === 0 ||
-            activeFilters.ustensils.every((filter) =>
-                recipe.ustensils.some((ustensil) => ustensil.toLowerCase().includes(filter.toLowerCase()))
-            )
+                for (let k = 0; k < recipe.ingredients.length; k++) {
+                    const ingredient = recipe.ingredients[k].ingredient.toLowerCase()
+                    if (ingredient.indexOf(filter) !== -1) {
+                        ingredientFound = true
+                        break
+                    }
+                }
+
+                if (!ingredientFound) {
+                    matchIngredients = false
+                    break
+                }
+            }
+        }
+
+        let matchAppliances = true
+        if (activeFilters.appliances.length > 0) {
+            matchAppliances = false
+            const appliance = recipe.appliance.toLowerCase()
+            for (let j = 0; j < activeFilters.appliances.length; j++) {
+                if (appliance === activeFilters.appliances[j].toLowerCase()) {
+                    matchAppliances = true
+                    break
+                }
+            }
+        }
+
+        let matchUstensils = true
+        if (activeFilters.ustensils.length > 0) {
+            for (let j = 0; j < activeFilters.ustensils.length; j++) {
+                let ustensilFound = false
+                const filter = activeFilters.ustensils[j].toLowerCase()
+
+                for (let k = 0; k < recipe.ustensils.length; k++) {
+                    const ustensil = recipe.ustensils[k].toLowerCase()
+                    if (ustensil.indexOf(filter) !== -1) {
+                        ustensilFound = true
+                        break
+                    }
+                }
+
+                if (!ustensilFound) {
+                    matchUstensils = false
+                    break
+                }
+            }
+        }
 
         if (matchIngredients && matchAppliances && matchUstensils) {
             tempRecipes.push(recipe)
         }
-    })
+    }
 
     filteredRecipes = tempRecipes
 }

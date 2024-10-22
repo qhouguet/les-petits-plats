@@ -19,9 +19,10 @@ export const renderRecipes = (data, value) => {
         errorElement.id = 'error'
         recipesSection.after(errorElement)
     } else {
-        data.forEach((recipe) => {
+        for (let i = 0; i < data.length; i++) {
+            const recipe = data[i]
             const recipeElement = renderRecipe(recipe)
             recipesSection.appendChild(recipeElement)
-        })
+        }
     }
 }

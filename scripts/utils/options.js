@@ -1,31 +1,106 @@
+const sortFunction = (a, b) => a.localeCompare(b)
+
 export const getRecipesOptions = (recipes) => {
-    const ingredientsSet = new Set()
-    const appliancesSet = new Set()
-    const ustensilsSet = new Set()
+    let ingredientsArray = []
+    let appliancesArray = []
+    let ustensilsArray = []
 
-    recipes.forEach((recipe) => {
-        recipe.ingredients.forEach(({ ingredient }) => {
-            ingredientsSet.add(ingredient)
-        })
+    for (let i = 0; i < recipes.length; i++) {
+        const recipe = recipes[i]
 
-        if (recipe.appliance) {
-            appliancesSet.add(recipe.appliance)
+        for (let j = 0; j < recipe.ingredients.length; j++) {
+            const ingredient = recipe.ingredients[j].ingredient
+            let isIngredientPresent = false
+
+            for (let k = 0; k < ingredientsArray.length; k++) {
+                if (ingredientsArray[k] === ingredient) {
+                    isIngredientPresent = true
+                    break
+                }
+            }
+
+            if (!isIngredientPresent) {
+                ingredientsArray.push(ingredient)
+            }
         }
 
-        recipe.ustensils.forEach((ustensil) => {
-            ustensilsSet.add(ustensil)
-        })
-    })
+        if (recipe.appliance) {
+            let isAppliancePresent = false
+            for (let j = 0; j < appliancesArray.length; j++) {
+                if (appliancesArray[j] === recipe.appliance) {
+                    isAppliancePresent = true
+                    break
+                }
+            }
 
-    const ingredients = Array.from(ingredientsSet).sort((a, b) => a.localeCompare(b))
-    const appliances = Array.from(appliancesSet).sort((a, b) => a.localeCompare(b))
-    const ustensils = Array.from(ustensilsSet).sort((a, b) => a.localeCompare(b))
+            if (!isAppliancePresent) {
+                appliancesArray.push(recipe.appliance)
+            }
+        }
 
-    return [ingredients, appliances, ustensils]
+        for (let j = 0; j < recipe.ustensils.length; j++) {
+            const ustensil = recipe.ustensils[j]
+            let isUstensilPresent = false
+
+            for (let k = 0; k < ustensilsArray.length; k++) {
+                if (ustensilsArray[k] === ustensil) {
+                    isUstensilPresent = true
+                    break
+                }
+            }
+
+            if (!isUstensilPresent) {
+                ustensilsArray.push(ustensil)
+            }
+        }
+    }
+
+    for (let i = 0; i < ingredientsArray.length - 1; i++) {
+        for (let j = i + 1; j < ingredientsArray.length; j++) {
+            if (sortFunction(ingredientsArray[i], ingredientsArray[j]) > 0) {
+                ;[ingredientsArray[i], ingredientsArray[j]] = [ingredientsArray[j], ingredientsArray[i]]
+            }
+        }
+    }
+
+    for (let i = 0; i < appliancesArray.length - 1; i++) {
+        for (let j = i + 1; j < appliancesArray.length; j++) {
+            if (sortFunction(appliancesArray[i], appliancesArray[j]) > 0) {
+                ;[appliancesArray[i], appliancesArray[j]] = [appliancesArray[j], appliancesArray[i]]
+            }
+        }
+    }
+
+    for (let i = 0; i < ustensilsArray.length - 1; i++) {
+        for (let j = i + 1; j < ustensilsArray.length; j++) {
+            if (sortFunction(ustensilsArray[i], ustensilsArray[j]) > 0) {
+                ;[ustensilsArray[i], ustensilsArray[j]] = [ustensilsArray[j], ustensilsArray[i]]
+            }
+        }
+    }
+
+    return [ingredientsArray, appliancesArray, ustensilsArray]
 }
 
 export const getRecipesOptionsWithSearch = (array, search) => {
     const searchLower = search.toLowerCase()
+    let result = []
 
-    return array.filter((element) => element.toLowerCase().includes(searchLower))
+    for (let i = 0; i < array.length; i++) {
+        const elementLower = array[i].toLowerCase()
+        let match = false
+
+        for (let j = 0; j <= elementLower.length - searchLower.length; j++) {
+            if (elementLower.substring(j, j + searchLower.length) === searchLower) {
+                match = true
+                break
+            }
+        }
+
+        if (match) {
+            result.push(array[i])
+        }
+    }
+
+    return result
 }
