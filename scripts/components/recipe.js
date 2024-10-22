@@ -71,7 +71,6 @@ export const renderRecipe = (recipe) => {
 
     for (let i = 0; i < recipe.ingredients.length; i++) {
         const item = recipe.ingredients[i]
-
         const elLi = document.createElement('li')
         const ingredientTitle = document.createElement('h5')
         ingredientTitle.className = 'font-semibold text-sm'
