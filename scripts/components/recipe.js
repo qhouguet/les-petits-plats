@@ -69,9 +69,7 @@ export const renderRecipe = (recipe) => {
 
     const fragment = document.createDocumentFragment()
 
-    for (let i = 0; i < recipe.ingredients.length; i++) {
-        const item = recipe.ingredients[i]
-
+    recipe.ingredients.forEach((item) => {
         const elLi = document.createElement('li')
         const ingredientTitle = document.createElement('h5')
         ingredientTitle.className = 'font-semibold text-sm'
@@ -88,7 +86,7 @@ export const renderRecipe = (recipe) => {
         }
 
         fragment.appendChild(elLi)
-    }
+    })
 
     elList.innerHTML = ''
     elList.appendChild(fragment)

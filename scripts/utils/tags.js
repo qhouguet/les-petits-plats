@@ -1,7 +1,7 @@
 import {
     activeFilters,
     ustensilsSearchText,
-    kitchenApplianceSearchText,
+    appliancesearchText,
     ingredientSearchText,
     optionIngredients,
     optionUstensils,
@@ -9,7 +9,7 @@ import {
     renderOptions,
     searchRecipes,
     ingredients,
-    kitchenAppliances,
+    appliances,
     ustensils,
 } from '../index.js'
 import { getRecipesOptionsWithSearch } from './options.js'
@@ -17,38 +17,19 @@ import { formatString } from './string.js'
 
 export const addTagToFilter = (tag, type) => {
     const formattedTag = tag.toLowerCase()
-    let isAlreadyPresent = false
-
-    const checkPresence = (array) => {
-        for (let i = 0; i < array.length; i++) {
-            if (array[i] === formattedTag) {
-                isAlreadyPresent = true
-                break
-            }
-        }
+    const filterMapping = {
+        ingredients: { list: activeFilters.ingredients, searchText: ingredientSearchText },
+        appliances: { list: activeFilters.appliances, searchText: appliancesearchText },
+        ustensils: { list: activeFilters.ustensils, searchText: ustensilsSearchText },
     }
 
-    if (type === 'ingredients') {
-        checkPresence(activeFilters.ingredients)
-        if (!isAlreadyPresent) {
-            activeFilters.ingredients.push(formattedTag)
-            filterDropdownTags('ingredients', ingredientSearchText)
-        }
-    } else if (type === 'kitchen-appliances') {
-        checkPresence(activeFilters.kitchenAppliances)
-        if (!isAlreadyPresent) {
-            activeFilters.kitchenAppliances.push(formattedTag)
-            filterDropdownTags('kitchen-appliances', kitchenApplianceSearchText)
-        }
-    } else if (type === 'ustensils') {
-        checkPresence(activeFilters.ustensils)
-        if (!isAlreadyPresent) {
-            activeFilters.ustensils.push(formattedTag)
-            filterDropdownTags('ustensils', ustensilsSearchText)
-        }
-    }
+    const filterData = filterMapping[type]
+    if (!filterData) return
 
+    const isAlreadyPresent = filterData.list.some((item) => item === formattedTag)
     if (!isAlreadyPresent) {
+        filterData.list.push(formattedTag)
+        filterDropdownTags(type, filterData.searchText)
         renderDropdownSelectedTag(tag, type)
         renderSelectedTag(tag, type)
         searchRecipes()
@@ -57,6 +38,8 @@ export const addTagToFilter = (tag, type) => {
 
 export const renderSelectedTag = (tag, type) => {
     const divSelectedOption = document.getElementById('div-selected-option')
+
+    const fragment = document.createDocumentFragment()
 
     const tagDiv = document.createElement('div')
     tagDiv.classList.add('flex', 'items-center', 'justify-between', 'p-4', 'bg-yellow-custom', 'min-w-52', 'rounded-lg')
@@ -74,7 +57,10 @@ export const renderSelectedTag = (tag, type) => {
 
     tagDiv.appendChild(tagName)
     tagDiv.appendChild(closeIcon)
-    divSelectedOption.appendChild(tagDiv)
+
+    fragment.appendChild(tagDiv)
+
+    divSelectedOption.appendChild(fragment)
 }
 
 export const removeTagFromFilter = (tag, type) => {
@@ -83,37 +69,35 @@ export const removeTagFromFilter = (tag, type) => {
     if (type === 'ingredients') {
         activeFilters.ingredients = activeFilters.ingredients.filter((item) => item !== formattedTag)
         filterDropdownTags('ingredients', ingredientSearchText)
-    } else if (type === 'kitchen-appliances') {
-        activeFilters.kitchenAppliances = activeFilters.kitchenAppliances.filter((item) => item !== formattedTag)
-        filterDropdownTags('kitchen-appliances', kitchenApplianceSearchText)
+    } else if (type === 'appliances') {
+        activeFilters.appliances = activeFilters.appliances.filter((item) => item !== formattedTag)
+        filterDropdownTags('appliances', appliancesearchText)
     } else if (type === 'ustensils') {
         activeFilters.ustensils = activeFilters.ustensils.filter((item) => item !== formattedTag)
         filterDropdownTags('ustensils', ustensilsSearchText)
     }
 
     const divSelectedOption = document.getElementById('div-selected-option')
-    const tagDivs = divSelectedOption.querySelectorAll('div')
-    for (const div of tagDivs) {
+    divSelectedOption.querySelectorAll('div').forEach((div) => {
         if (div.textContent.trim() === formatString(tag)) {
             div.remove()
         }
-    }
+    })
 
     let dropdownSelected
     if (type === 'ingredients') {
         dropdownSelected = document.getElementById('dropdown-selected-options-ingredients')
-    } else if (type === 'kitchen-appliances') {
-        dropdownSelected = document.getElementById('dropdown-selected-options-kitchen-appliance')
+    } else if (type === 'appliances') {
+        dropdownSelected = document.getElementById('dropdown-selected-options-appliance')
     } else if (type === 'ustensils') {
         dropdownSelected = document.getElementById('dropdown-selected-options-ustensils')
     }
 
-    const dropdownTagDivs = dropdownSelected.querySelectorAll('div')
-    for (const div of dropdownTagDivs) {
+    dropdownSelected.querySelectorAll('div').forEach((div) => {
         if (div.textContent.trim() === formatString(tag)) {
             div.remove()
         }
-    }
+    })
 
     searchRecipes()
 }
@@ -123,8 +107,8 @@ export const renderDropdownSelectedTag = (tag, type) => {
 
     if (type === 'ingredients') {
         dropdownSelected = document.getElementById('dropdown-selected-options-ingredients')
-    } else if (type === 'kitchen-appliances') {
-        dropdownSelected = document.getElementById('dropdown-selected-options-kitchen-appliance')
+    } else if (type === 'appliances') {
+        dropdownSelected = document.getElementById('dropdown-selected-options-appliance')
     } else if (type === 'ustensils') {
         dropdownSelected = document.getElementById('dropdown-selected-options-ustensils')
     }
@@ -172,9 +156,9 @@ export const filterDropdownTags = (type, searchText) => {
         options = getRecipesOptionsWithSearch(ingredients, searchText)
         selectedTags = activeFilters.ingredients
         domElement = optionIngredients
-    } else if (type === 'kitchen-appliances') {
-        options = getRecipesOptionsWithSearch(kitchenAppliances, searchText)
-        selectedTags = activeFilters.kitchenAppliances
+    } else if (type === 'appliances') {
+        options = getRecipesOptionsWithSearch(appliances, searchText)
+        selectedTags = activeFilters.appliances
         domElement = optionKitchenAppliance
     } else if (type === 'ustensils') {
         options = getRecipesOptionsWithSearch(ustensils, searchText)
@@ -182,23 +166,7 @@ export const filterDropdownTags = (type, searchText) => {
         domElement = optionUstensils
     }
 
-    const filteredOptions = []
+    const filteredOptions = options.filter((option) => !selectedTags.includes(option.toLowerCase()))
 
-    for (let i = 0; i < options.length; i++) {
-        const option = options[i].toLowerCase()
-        let isSelected = false
-
-        for (let j = 0; j < selectedTags.length; j++) {
-            if (selectedTags[j] === option) {
-                isSelected = true
-                break
-            }
-        }
-
-        if (!isSelected) {
-            filteredOptions.push(options[i])
-        }
-    }
-
-    renderOptions(filteredOptions, domElement, selectedTags, type)
+    renderOptions(filteredOptions, domElement, type)
 }

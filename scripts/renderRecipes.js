@@ -4,7 +4,7 @@ const recipesSection = document.getElementById('recipes-section')
 const recipesCount = document.getElementById('recipes-count')
 const recipesCountLabel = document.getElementById('recipes-count-label')
 
-export const renderRecipes = (data, value, index) => {
+export const renderRecipes = (data, value) => {
     recipesSection.innerHTML = ''
     recipesCount.textContent = data.length
     recipesCountLabel.textContent = data.length > 1 ? 'recettes' : 'recette'
@@ -19,9 +19,9 @@ export const renderRecipes = (data, value, index) => {
         errorElement.id = 'error'
         recipesSection.after(errorElement)
     } else {
-        for (let i = 0; i < data.slice(0, index).length; i++) {
-            const recipeElement = renderRecipe(data[i])
+        data.forEach((recipe) => {
+            const recipeElement = renderRecipe(recipe)
             recipesSection.appendChild(recipeElement)
-        }
+        })
     }
 }
