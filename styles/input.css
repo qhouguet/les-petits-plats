@@ -32,7 +32,7 @@
 
     .hero {
         @apply bg-no-repeat bg-center bg-cover flex flex-col;
-        background-image: url('../assets/img/Hero.jpg');
+        background-image: url('https://github.com/qhouguet/les-petits-plats/blob/main/assets/img/hero.jpg');
     }
 
     .search-option {
