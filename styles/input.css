@@ -27,7 +27,7 @@
     }
 
     .dropdown-content {
-        @apply flex cursor-pointer justify-between items-center;
+        @apply flex cursor-pointer justify-between items-center z-50;
     }
 
     .hero {
