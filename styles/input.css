@@ -32,7 +32,7 @@
 
     .hero {
         @apply bg-no-repeat bg-center bg-cover flex flex-col;
-        background-image: url('/les-petits-plaats/assets/img/hero.jpg');
+        background-image: url('/les-petits-plats/assets/img/hero.jpg');
     }
 
     .search-option {
